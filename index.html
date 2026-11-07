@@ -1,42 +1,456 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>غرفة الهروب السيبرانية | Cyber Escape Room</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        cyber: {
-                            cyan: '#00f3ff',
-                            purple: '#b967ff',
-                            dark: '#0a0d14',
-                            card: '#121824'
-                        }
-                    }
-                }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cyber Escape Room - غرفة الهروب السيبرانية</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cyber: {
+              bg: '#0a0d14',
+              card: '#121824',
+              cyan: '#00f3ff',
+              purple: '#bc13fe',
+              neon: '#39ff14',
+              pink: '#ff007f'
             }
+          }
         }
-    </script>
-    <style>
-        body {
-            background-color: #0a0d14;
-            color: #e2e8f0;
-            font-family: system-ui, -apple-system, sans-serif;
-        }
-        .glow-cyan {
-            box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
-        }
-        .glow-purple {
-            box-shadow: 0 0 15px rgba(185, 103, 255, 0.3);
-        }
-    </style>
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap');
+    body { font-family: 'Tajawal', sans-serif; background-color: #0a0d14; color: #f3f4f6; }
+    .glow-cyan { box-shadow: 0 0 15px rgba(0, 243, 255, 0.3); }
+    .glow-purple { box-shadow: 0 0 15px rgba(188, 19, 254, 0.3); }
+    .scanline {
+      background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0, 0, 0, 0.3) 50%, rgba(0, 0, 0, 0.3));
+      background-size: 100% 4px;
+    }
+  </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between p-4 md:p-8">
+<body class="min-h-screen scanline flex flex-col justify-between">
 
-    <!-- Header / Navigation -->
-    <header class="max-w-4xl w-full mx-auto flex
+  <!-- Header -->
+  <header class="border-b border-slate-800 bg-cyber-card/80 backdrop-blur p-4 sticky top-0 z-50">
+    <div class="max-w-5xl mx-auto flex flex-wrap justify-between items-center gap-4">
+      <div class="flex items-center space-x-3 space-x-reverse">
+        <span class="text-2xl">🔒</span>
+        <h1 class="text-xl font-bold text-cyber-cyan tracking-wide">غرفة الهروب السيبرانية</h1>
+      </div>
+      <div class="flex items-center space-x-6 space-x-reverse text-sm font-semibold">
+        <div id="room-step-1" class="flex items-center space-x-2 space-x-reverse text-cyber-cyan">
+          <span class="w-7 h-7 rounded-full bg-cyber-cyan/20 border border-cyber-cyan flex items-center justify-center text-xs">1</span>
+          <span>غرفة الأمن</span>
+        </div>
+        <div id="room-step-2" class="flex items-center space-x-2 space-x-reverse text-gray-500">
+          <span class="w-7 h-7 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-xs">2</span>
+          <span>غرفة الطاقة</span>
+        </div>
+        <div id="room-step-3" class="flex items-center space-x-2 space-x-reverse text-gray-500">
+          <span class="w-7 h-7 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-xs">3</span>
+          <span>النواة الفائقة</span>
+        </div>
+      </div>
+      <div class="flex items-center space-x-4 space-x-reverse">
+        <div class="bg-slate-900 border border-slate-700 px-3 py-1.5 rounded-lg text-cyber-neon font-mono text-sm">
+          ⏳ <span id="timer-display">00:00</span>
+        </div>
+        <button onclick="triggerHint()" class="bg-purple-900/40 hover:bg-purple-800/60 border border-cyber-purple text-purple-200 px-3 py-1.5 rounded-lg text-xs transition">
+          💡 تلميح (<span id="hint-count">3</span>)
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="max-w-4xl mx-auto w-full p-4 flex-grow flex items-center justify-center">
+    
+    <!-- Start Screen -->
+    <div id="screen-start" class="w-full bg-cyber-card border border-cyber-cyan/30 rounded-2xl p-8 text-center glow-cyan">
+      <h2 class="text-3xl font-extrabold text-white mb-4">اختبار الاختراق والهروب السيبراني</h2>
+      <p class="text-gray-300 max-w-xl mx-auto mb-8 leading-relaxed">
+        أهلاً بك أيها المهندس/ة. لقد تم إغلاق النظام الأمني للمختبر الرئيسي. عليك حل الألغاز التقنية في كل غرفة لتفعيل أنظمة الهروب واجتياز التحدي!
+      </p>
+      <button onclick="startGame()" class="bg-cyber-cyan hover:bg-cyan-400 text-slate-950 font-bold px-8 py-3 rounded-xl text-lg transition shadow-lg shadow-cyan-500/20">
+        ابدأ التحدي الآن
+      </button>
+    </div>
+
+    <!-- Room 1 -->
+    <div id="room-1" class="w-full hidden space-y-6">
+      <div class="bg-cyber-card border border-slate-800 rounded-2xl p-6">
+        <h2 class="text-xl font-bold text-cyber-cyan mb-2">غرفة الأمن: فك تشفير الباب</h2>
+        <p class="text-gray-300 text-sm">ابحث عن الملاحظة المتروكة واكتشف رمز المرور المؤلف من 4 أرقام لفتح الباب.</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between">
+          <div>
+            <h3 class="font-bold mb-4 text-cyber-purple">العناصر المتاحة:</h3>
+            <button onclick="inspectNote()" class="w-full bg-slate-800 hover:bg-slate-700 border border-slate-700 p-4 rounded-xl text-right transition flex items-center space-x-3 space-x-reverse mb-3">
+              <span class="text-2xl">📝</span>
+              <div>
+                <div class="font-bold text-white text-sm">ملاحظة أمنية مشفرة</div>
+                <div class="text-xs text-gray-400">انقر لمعاينة المحتوى</div>
+              </div>
+            </button>
+          </div>
+          <div id="note-modal" class="hidden bg-slate-950 border border-cyber-purple p-4 rounded-xl text-xs font-mono text-purple-300 space-y-1">
+            <p>// ملاحظة مهندس النظام:</p>
+            <p>الرمز هو سنة أول إرسال لرسالة ARPANET التاريخية (1969) مطروحاً منها 148</p>
+            <p>سنة التأسيس: 1969 - 148 = ؟؟؟؟</p>
+          </div>
+        </div>
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 text-center space-y-4">
+          <h3 class="font-bold text-gray-200">لوحة الإدخال الرقمية</h3>
+          <div id="r1-passcode-display" class="bg-black border border-cyber-cyan text-cyber-cyan font-mono text-2xl py-3 rounded-xl tracking-widest min-h-[52px] flex items-center justify-center">
+            ----
+          </div>
+          <div class="grid grid-cols-3 gap-2 max-w-[220px] mx-auto">
+            <button onclick="pressNum('1')" class="bg-slate-800 hover:bg-slate-700 py-3 rounded-lg text-lg font-bold">1</button>
+            <button onclick="pressNum('2')" class="bg-slate-800 hover:bg-slate-700 py-3 rounded-lg text-lg font-bold">2</button>
+            <button onclick="pressNum('3')" class="bg-slate-800 hover:bg-slate-700 py-3 rounded-lg text-lg font-bold">3</button>
+            <button onclick="pressNum('4')" class="bg-slate-800 hover:bg-slate-700 py-3 rounded-lg text-lg font-bold">4</button>
+            <button onclick="pressNum('5')" class="bg-slate-800 hover:bg-slate-700 py-3 rounded-lg text-lg font-bold">5</button>
+            <button onclick="pressNum('6')" class="bg-slate-800 hover:bg-slate-700 py-3 rounded-lg text-lg font-bold">6</button>
+            <button onclick="pressNum('7')" class="bg-slate-800 hover:bg-slate-700 py-3 rounded-lg text-lg font-bold">7</button>
+            <button onclick="pressNum('8')" class="bg-slate-800 hover:bg-slate-700 py-3 rounded-lg text-lg font-bold">8</button>
+            <button onclick="pressNum('9')" class="bg-slate-800 hover:bg-slate-700 py-3 rounded-lg text-lg font-bold">9</button>
+            <button onclick="clearNum()" class="bg-red-950/60 hover:bg-red-900/80 text-red-400 py-3 rounded-lg text-sm font-bold">C</button>
+            <button onclick="pressNum('0')" class="bg-slate-800 hover:bg-slate-700 py-3 rounded-lg text-lg font-bold">0</button>
+            <button onclick="submitPasscode()" class="bg-cyber-cyan hover:bg-cyan-400 text-slate-950 py-3 rounded-lg text-sm font-bold">✓</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Room 2 -->
+    <div id="room-2" class="w-full hidden space-y-6">
+      <div class="bg-cyber-card border border-slate-800 rounded-2xl p-6">
+        <h2 class="text-xl font-bold text-cyber-cyan mb-2">غرفة الطاقة: موازنة المكثفات</h2>
+        <p class="text-gray-300 text-sm">اضبط قيم المحطات الكهربائية الثلاث بحيث يكون إجمالي الطاقة الإجمالية 100 Megawatts تماماً لفتح الباب الرئيسي.</p>
+      </div>
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-6">
+        <div class="flex justify-between items-center bg-black/50 p-4 rounded-xl border border-slate-800">
+          <span class="text-gray-400 text-sm">إجمالي الطاقة الحالية:</span>
+          <span id="total-power-display" class="font-mono text-2xl font-bold text-cyber-neon">80 MW</span>
+        </div>
+        <div class="space-y-4">
+          <div>
+            <div class="flex justify-between text-xs text-gray-400 mb-1">
+              <span>المكثف أ (التحكم بالشبكة)</span>
+              <span id="val-1">20 MW</span>
+            </div>
+            <input type="range" min="0" max="50" value="20" oninput="updatePower(1, this.value)" class="w-full accent-cyan-400 bg-slate-800 h-2 rounded-lg cursor-pointer">
+          </div>
+          <div>
+            <div class="flex justify-between text-xs text-gray-400 mb-1">
+              <span>المكثف ب (تغذية الخوادم)</span>
+              <span id="val-2">50 MW</span>
+            </div>
+            <input type="range" min="0" max="50" value="50" oninput="updatePower(2, this.value)" class="w-full accent-purple-500 bg-slate-800 h-2 rounded-lg cursor-pointer">
+          </div>
+          <div>
+            <div class="flex justify-between text-xs text-gray-400 mb-1">
+              <span>المكثف ج (نظام التبريد)</span>
+              <span id="val-3">10 MW</span>
+            </div>
+            <input type="range" min="0" max="50" value="10" oninput="updatePower(3, this.value)" class="w-full accent-green-400 bg-slate-800 h-2 rounded-lg cursor-pointer">
+          </div>
+        </div>
+        <button onclick="checkPowerBalance()" class="w-full bg-cyber-cyan hover:bg-cyan-400 text-slate-950 font-bold py-3 rounded-xl transition">
+          تأكيد الموازنة وتفعيل التيار
+        </button>
+      </div>
+    </div>
+
+    <!-- Room 3 -->
+    <div id="room-3" class="w-full hidden space-y-6">
+      <div class="bg-cyber-card border border-slate-800 rounded-2xl p-6">
+        <h2 class="text-xl font-bold text-cyber-cyan mb-2">النواة الفائقة: التجاوز البرمجي الأخير</h2>
+        <p class="text-gray-300 text-sm">حل اللغز البرمجي التالي وأدخل النتيجة في موجه الأوامر (Terminal) لإلغاء القفل النهائي.</p>
+      </div>
+      <div class="bg-slate-950 border border-slate-800 rounded-2xl p-6 font-mono text-sm space-y-4">
+        <div class="text-gray-400">// اللغز البرمجي:</div>
+        <div class="bg-slate-900 p-4 rounded-xl text-green-400 leading-relaxed">
+          let result = "صوت";<br>
+          if (word.returns && word.repeats) {<br>
+          &nbsp;&nbsp;result = "الصدى"; // echo<br>
+          }<br>
+          // السؤال: ماهي الكلمة التي "ترتد وتناديك" عند المناداة في الوادي؟ (اكتبها باللغة العربية أو الإنجليزية)
+        </div>
+        <div class="flex gap-2">
+          <input type="text" id="terminal-input" placeholder="أدخل الإجابة هنا..." class="flex-grow bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-white focus:outline-none focus:border-cyber-cyan">
+          <button onclick="submitTerminalCode()" class="bg-cyber-cyan hover:bg-cyan-400 text-slate-950 px-6 py-2 rounded-xl font-bold transition">
+            تأكيد
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Win Screen -->
+    <div id="screen-win" class="w-full hidden bg-cyber-card border border-cyber-neon/40 rounded-2xl p-8 text-center glow-cyan space-y-6">
+      <div class="text-5xl mb-2">🎉</div>
+      <h2 class="text-3xl font-extrabold text-white">تم الهروب بنجاح!</h2>
+      <p class="text-gray-300 max-w-md mx-auto">
+        تهانينا! لقد تمكنت من اجتياز جميع الغرف وحل الألغاز في وقت قياسي.
+      </p>
+      <div class="grid grid-cols-2 gap-4 max-w-sm mx-auto text-center">
+        <div class="bg-slate-900 p-4 rounded-xl border border-slate-800">
+          <div class="text-xs text-gray-400">الوقت المستغرق</div>
+          <div id="final-time" class="text-xl font-mono font-bold text-cyber-cyan">00:00</div>
+        </div>
+        <div class="bg-slate-900 p-4 rounded-xl border border-slate-800">
+          <div class="text-xs text-gray-400">التلميحات المستعملة</div>
+          <div id="final-hints" class="text-xl font-mono font-bold text-cyber-purple">0</div>
+        </div>
+      </div>
+      <div class="text-sm font-semibold text-gray-300">
+        الرتبة الأمنية: <span id="final-rank" class="text-cyber-neon font-bold">مخترق محترف (S Class)</span>
+      </div>
+      <button onclick="resetGame()" class="bg-cyber-cyan hover:bg-cyan-400 text-slate-950 font-bold px-8 py-3 rounded-xl transition">
+        إعادة التحدي
+      </button>
+    </div>
+
+  </main>
+
+  <!-- Notification Toast -->
+  <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-900 border border-cyber-cyan text-white px-6 py-3 rounded-xl text-sm font-semibold hidden shadow-xl">
+    تنبيه
+  </div>
+
+  <!-- Audio Synthesis (Web Audio API) & Game Logic -->
+  <script>
+    class SoundManager {
+      constructor() {
+        this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      playClick() {
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(600, this.ctx.currentTime);
+        gain.gain.setValueAtTime(0.05, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.05);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.05);
+      }
+      playSuccess() {
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(440, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(880, this.ctx.currentTime + 0.2);
+        gain.gain.setValueAtTime(0.1, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.2);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.2);
+      }
+      playError() {
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(180, this.ctx.currentTime);
+        osc.frequency.linearRampToValueAtTime(110, this.ctx.currentTime + 0.2);
+        gain.gain.setValueAtTime(0.1, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.2);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.2);
+      }
+    }
+
+    const sound = new SoundManager();
+    let currentRoom = 1;
+    let secondsElapsed = 0;
+    let timerInterval = null;
+    let hintsLeft = 3;
+    let hintsUsed = 0;
+    let currentPasscode = "";
+    let nodeValues = { 1: 20, 2: 50, 3: 10 };
+
+    function showMessage(msg, isError = false) {
+      const toast = document.getElementById('toast');
+      toast.innerText = msg;
+      toast.className = `fixed bottom-6 left-1/2 -translate-x-1/2 border px-6 py-3 rounded-xl text-sm font-semibold shadow-xl transition-all duration-300 ${isError ? 'bg-red-950 border-red-500 text-red-200' : 'bg-slate-900 border-cyber-cyan text-white'}`;
+      toast.classList.remove('hidden');
+      setTimeout(() => toast.classList.add('hidden'), 3000);
+    }
+
+    function startTimer() {
+      clearInterval(timerInterval);
+      secondsElapsed = 0;
+      timerInterval = setInterval(() => {
+        secondsElapsed++;
+        const mins = String(Math.floor(secondsElapsed / 60)).padStart(2, '0');
+        const secs = String(secondsElapsed % 60).padStart(2, '0');
+        document.getElementById('timer-display').innerText = `${mins}:${secs}`;
+      }, 1000);
+    }
+
+    function stopTimer() {
+      clearInterval(timerInterval);
+    }
+
+    function startGame() {
+      sound.playSuccess();
+      document.getElementById('screen-start').classList.add('hidden');
+      document.getElementById('room-1').classList.remove('hidden');
+      startTimer();
+    }
+
+    function updateHeaderSteps(roomNum) {
+      for(let i=1; i<=3; i++) {
+        const stepEl = document.getElementById(`room-step-${i}`);
+        if(i === roomNum) {
+          stepEl.className = "flex items-center space-x-2 space-x-reverse text-cyber-cyan";
+          stepEl.querySelector('span').className = "w-7 h-7 rounded-full bg-cyber-cyan/20 border border-cyber-cyan flex items-center justify-center text-xs";
+        } else if(i < roomNum) {
+          stepEl.className = "flex items-center space-x-2 space-x-reverse text-cyber-neon";
+          stepEl.querySelector('span').className = "w-7 h-7 rounded-full bg-cyber-neon/20 border border-cyber-neon flex items-center justify-center text-xs";
+        } else {
+          stepEl.className = "flex items-center space-x-2 space-x-reverse text-gray-500";
+          stepEl.querySelector('span').className = "w-7 h-7 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-xs";
+        }
+      }
+    }
+
+    // Room 1 Logic
+    function inspectNote() {
+      sound.playClick();
+      const modal = document.getElementById('note-modal');
+      modal.classList.toggle('hidden');
+    }
+
+    function pressNum(num) {
+      sound.playClick();
+      if(currentPasscode.length < 4) {
+        currentPasscode += num;
+        document.getElementById('r1-passcode-display').innerText = currentPasscode.padEnd(4, '-');
+      }
+    }
+
+    function clearNum() {
+      sound.playClick();
+      currentPasscode = "";
+      document.getElementById('r1-passcode-display').innerText = "----";
+    }
+
+    function submitPasscode() {
+      if (currentPasscode === "1821") {
+        sound.playSuccess();
+        showMessage("تم فتح قفل غرفة الأمن بنجاح!");
+        document.getElementById('room-1').classList.add('hidden');
+        document.getElementById('room-2').classList.remove('hidden');
+        currentRoom = 2;
+        updateHeaderSteps(2);
+      } else {
+        sound.playError();
+        showMessage("الرمز غير صحيح، حاول مجدداً!", true);
+        clearNum();
+      }
+    }
+
+    // Room 2 Logic
+    function updatePower(id, val) {
+      sound.playClick();
+      nodeValues[id] = parseInt(val);
+      document.getElementById(`val-${id}`).innerText = `${val} MW`;
+      const total = nodeValues[1] + nodeValues[2] + nodeValues[3];
+      document.getElementById('total-power-display').innerText = `${total} MW`;
+    }
+
+    function checkPowerBalance() {
+      const total = nodeValues[1] + nodeValues[2] + nodeValues[3];
+      if (total === 100) {
+        sound.playSuccess();
+        showMessage("تم موازنة الطاقة وتغذية النواة الفائقة!");
+        document.getElementById('room-2').classList.add('hidden');
+        document.getElementById('room-3').classList.remove('hidden');
+        currentRoom = 3;
+        updateHeaderSteps(3);
+      } else {
+        sound.playError();
+        showMessage(`الطاقة الإجمالية الحالية ${total} MW. يجب أن تكون 100 MW بالضبط!`, true);
+      }
+    }
+
+    // Room 3 Logic
+    function submitTerminalCode() {
+      const val = document.getElementById('terminal-input').value.trim().toLowerCase();
+      if (val === 'الصدى' || val === 'echo' || val === 'الصدى ') {
+        sound.playSuccess();
+        stopTimer();
+        showWinScreen();
+      } else {
+        sound.playError();
+        showMessage("إجابة أو كلمة مرور خاطئة! حاول مرة أخرى", true);
+      }
+    }
+
+    // Hints
+    function triggerHint() {
+      if (hintsLeft <= 0) {
+        showMessage("لقد استنفدت جميع التلميحات المتاحة!", true);
+        return;
+      }
+      sound.playClick();
+      hintsLeft--;
+      hintsUsed++;
+      document.getElementById('hint-count').innerText = hintsLeft;
+      
+      if (currentRoom === 1) showMessage("تلميح الغرفة 1: اطرح 148 من 1969 الناتج هو 1821");
+      else if (currentRoom === 2) showMessage("تلميح الغرفة 2: اضبط القيم بحيث يكون مجموع الخانات 100 (مثال: 30 + 50 + 20)");
+      else if (currentRoom === 3) showMessage("تلميح الغرفة 3: الكلمة المطلوبة هي صوت يرتد ويناديك... (الصدى)");
+    }
+
+    // Victory Screen
+    function showWinScreen() {
+      document.getElementById('room-3').classList.add('hidden');
+      document.getElementById('screen-win').classList.remove('hidden');
+      
+      const mins = String(Math.floor(secondsElapsed / 60)).padStart(2, '0');
+      const secs = String(secondsElapsed % 60).padStart(2, '0');
+      document.getElementById('final-time').innerText = `${mins}:${secs}`;
+      document.getElementById('final-hints').innerText = hintsUsed;
+      
+      let rank = "مخترق محترف (S Class)";
+      if (secondsElapsed > 180 || hintsUsed > 2) rank = "مخترق مبتدئ (C Class)";
+      else if (secondsElapsed > 100) rank = "مخترق متوسط (B Class)";
+      
+      document.getElementById('final-rank').innerText = rank;
+    }
+
+    // Reset Game
+    function resetGame() {
+      sound.playClick();
+      currentRoom = 1;
+      secondsElapsed = 0;
+      hintsLeft = 3;
+      hintsUsed = 0;
+      currentPasscode = "";
+      nodeValues = { 1: 20, 2: 50, 3: 10 };
+      
+      document.getElementById('hint-count').innerText = hintsLeft;
+      document.getElementById('r1-passcode-display').innerText = "----";
+      document.getElementById('terminal-input').value = "";
+      
+      document.getElementById('screen-win').classList.add('hidden');
+      document.getElementById('screen-start').classList.remove('hidden');
+      updateHeaderSteps(1);
+      showMessage("تمت إعادة ضبط النظام!");
+    }
+  </script>
+</body>
+</html>
